@@ -312,11 +312,26 @@ header[data-testid="stHeader"] {{
 }}
 header[data-testid="stHeader"] [data-testid="stToolbar"] {{visibility: hidden;}}
 header[data-testid="stHeader"] [data-testid="stDecoration"] {{display: none;}}
+/* PENTING: visibility:hidden pada stToolbar di atas TURUN ke elemen anak
+   (visibility, tidak seperti display, diwariskan) - termasuk tombol buka
+   sidebar (stExpandSidebarButton) yang ternyata bersarang di dalam
+   stToolbar pada versi Streamlit ini. Ini akar penyebab sidebar tidak
+   bisa dibuka lagi setelah ditutup. Kembalikan visibility eksplisit utk
+   tombol ini & semua isinya (ikon di dalamnya jg mewarisi hidden). */
+[data-testid="stExpandSidebarButton"],
 [data-testid="stSidebarCollapsedControl"],
 [data-testid="collapsedControl"],
 [data-testid="stSidebarCollapseButton"] {{
     visibility: visible !important; display: flex !important;
+    opacity: 1 !important; pointer-events: auto !important;
     z-index: 999999 !important; position: relative;
+}}
+[data-testid="stExpandSidebarButton"] *,
+[data-testid="stSidebarCollapsedControl"] *,
+[data-testid="collapsedControl"] *,
+[data-testid="stSidebarCollapseButton"] * {{
+    visibility: visible !important;
+    opacity: 1 !important; pointer-events: auto !important;
 }}
 
 /* Strip identitas instansi di bagian paling atas */
