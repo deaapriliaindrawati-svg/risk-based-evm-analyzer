@@ -323,15 +323,12 @@ header[data-testid="stHeader"] [data-testid="stDecoration"] {{display: none;}}
 [data-testid="collapsedControl"],
 [data-testid="stSidebarCollapseButton"] {{
     visibility: visible !important; display: flex !important;
-    opacity: 1 !important; pointer-events: auto !important;
     z-index: 999999 !important; position: relative;
 }}
-[data-testid="stExpandSidebarButton"] *,
-[data-testid="stSidebarCollapsedControl"] *,
-[data-testid="collapsedControl"] *,
-[data-testid="stSidebarCollapseButton"] * {{
+[data-testid="stExpandSidebarButton"] span,
+[data-testid="stSidebarCollapsedControl"] span,
+[data-testid="collapsedControl"] span {{
     visibility: visible !important;
-    opacity: 1 !important; pointer-events: auto !important;
 }}
 
 /* Strip identitas instansi di bagian paling atas */
