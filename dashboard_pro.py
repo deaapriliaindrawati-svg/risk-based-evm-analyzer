@@ -299,10 +299,25 @@ st.markdown(f"""
 html, body, [class*="css"] {{ font-family: 'Inter', sans-serif; }}
 .stApp {{ background-color: {C['bg']}; }}
 
-/* Sembunyikan chrome bawaan Streamlit yang tidak perlu */
+/* Sembunyikan chrome bawaan Streamlit yang tidak perlu - TAPI jangan
+   sembunyikan <header> secara utuh, karena tombol buka/tutup sidebar
+   menempel di situ pada versi Streamlit terbaru. Menyembunyikannya
+   membuat sidebar tidak bisa dibuka lagi setelah tertutup/tampilan
+   diperbesar. Sembunyikan isi toolbar-nya saja (menu, tombol Deploy,
+   ikon GitHub), dan pastikan kontrol sidebar selalu di atas & terlihat. */
 #MainMenu {{visibility: hidden;}}
 footer {{visibility: hidden;}}
-header {{visibility: hidden;}}
+header[data-testid="stHeader"] {{
+    background: transparent; height: 2.75rem;
+}}
+header[data-testid="stHeader"] [data-testid="stToolbar"] {{visibility: hidden;}}
+header[data-testid="stHeader"] [data-testid="stDecoration"] {{display: none;}}
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+[data-testid="stSidebarCollapseButton"] {{
+    visibility: visible !important; display: flex !important;
+    z-index: 999999 !important; position: relative;
+}}
 
 /* Strip identitas instansi di bagian paling atas */
 .topbar {{
@@ -318,27 +333,27 @@ header {{visibility: hidden;}}
    Pertamina) - satu strip HERO di paling atas halaman, dibuat full-bleed
    (menembus padding container Streamlit) supaya benar-benar penuh selebar
    layar, bukan cuma sebatas lebar konten. */
-div[data-testid="stMainBlockContainer"] {{ padding-top: 0 !important; }}
+div[data-testid="stMainBlockContainer"] {{ padding-top: 0.5rem !important; }}
 .brand-ribbon {{
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
-    gap: 1.1rem; background: linear-gradient(120deg, {C['fac_navy']} 0%, {C['prime_navy']} 100%);
-    padding: 1.6rem 3vw; border-bottom: 5px solid {C['fac_gold']};
+    gap: 0.9rem; background: linear-gradient(120deg, {C['fac_navy']} 0%, {C['prime_navy']} 100%);
+    padding: 0.7rem 2vw; border-bottom: 4px solid {C['fac_gold']};
     width: 100vw; position: relative; left: 50%; right: 50%;
-    margin-left: -50vw; margin-right: -50vw; margin-top: -1rem; margin-bottom: 1.8rem;
-    box-shadow: 0 4px 18px rgba(6,51,123,0.25);
+    margin-left: -50vw; margin-right: -50vw; margin-top: 0; margin-bottom: 1.2rem;
+    box-shadow: 0 2px 10px rgba(6,51,123,0.2); z-index: 1;
 }}
-.brand-ribbon .brand-left {{ display: flex; align-items: center; gap: 1.1rem; }}
-.brand-ribbon .brand-left img {{ height: 58px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }}
-.brand-ribbon .brand-name {{ font-size: 2rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.02em; line-height: 1.1; }}
-.brand-ribbon .brand-tagline {{ font-size: 0.85rem; color: {C['fac_gold']}; font-weight: 600; letter-spacing: 0.01em; margin-top: 0.15rem; }}
-.brand-ribbon .brand-right {{ display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; justify-content: flex-end; }}
-.brand-ribbon .inst-block {{ text-align: right; line-height: 1.35; }}
-.brand-ribbon .inst-block .inst-univ {{ font-size: 0.92rem; font-weight: 700; color: #FFFFFF; }}
-.brand-ribbon .inst-block .inst-fac {{ font-size: 0.78rem; color: {C['fac_gold']}; font-weight: 600; }}
+.brand-ribbon .brand-left {{ display: flex; align-items: center; gap: 0.7rem; }}
+.brand-ribbon .brand-left img {{ height: 34px; width: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.25)); }}
+.brand-ribbon .brand-name {{ font-size: 1.2rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.02em; line-height: 1.1; }}
+.brand-ribbon .brand-tagline {{ font-size: 0.68rem; color: {C['fac_gold']}; font-weight: 600; letter-spacing: 0.01em; margin-top: 0.1rem; }}
+.brand-ribbon .brand-right {{ display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; justify-content: flex-end; }}
+.brand-ribbon .inst-block {{ text-align: right; line-height: 1.3; }}
+.brand-ribbon .inst-block .inst-univ {{ font-size: 0.78rem; font-weight: 700; color: #FFFFFF; }}
+.brand-ribbon .inst-block .inst-fac {{ font-size: 0.66rem; color: {C['fac_gold']}; font-weight: 600; }}
 .client-chip {{
-    display: inline-flex; align-items: center; gap: 0.4rem; background: {C['client_red']};
-    color: #FFFFFF; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em;
-    padding: 0.45rem 0.9rem; border-radius: 99px; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 0.35rem; background: {C['client_red']};
+    color: #FFFFFF; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;
+    padding: 0.3rem 0.7rem; border-radius: 99px; text-transform: uppercase;
     box-shadow: 0 2px 6px rgba(226,31,35,0.35);
 }}
 .client-chip .dot2 {{ width: 7px; height: 7px; border-radius: 50%; background: {C['client_blue']}; display: inline-block; }}
@@ -832,16 +847,6 @@ def rp(x, unit=True):
 # SIDEBAR
 # =========================================================================
 with st.sidebar:
-    if PRIME_LOGO_B64:
-        st.markdown(f"""
-        <div class="sidebar-prime">
-          <img src="data:image/png;base64,{PRIME_LOGO_B64}" alt="Logo {PRIME_NAME}" />
-          <div>
-            <div class="prime-word">{PRIME_NAME}</div>
-            <div class="prime-tag">{PRIME_TAGLINE}</div>
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
     if LOGO_B64:
         st.markdown(f"""
         <div class="sidebar-institution">
@@ -850,6 +855,16 @@ with st.sidebar:
             <div class="inst-name">{UNIVERSITAS}</div>
             <div class="inst-faculty">{FAKULTAS}</div>
             <div class="inst-jurusan">{JURUSAN}</div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+    if PRIME_LOGO_B64:
+        st.markdown(f"""
+        <div class="sidebar-prime">
+          <img src="data:image/png;base64,{PRIME_LOGO_B64}" alt="Logo {PRIME_NAME}" />
+          <div>
+            <div class="prime-word">{PRIME_NAME}</div>
+            <div class="prime-tag">{PRIME_TAGLINE}</div>
           </div>
         </div>
         """, unsafe_allow_html=True)
