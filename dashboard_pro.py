@@ -889,24 +889,25 @@ with st.sidebar:
     st.markdown("---")
     st.markdown('<div class="sidebar-step">Langkah 1 — Unggah Data Proyek</div>', unsafe_allow_html=True)
     st.caption(
-        "Belum punya file dengan format yang sesuai? Unduh template kosong di bawah, "
-        "isi dengan data proyek Anda sendiri, lalu unggah kembali di sini."
+        "Apabila belum tersedia berkas dengan format yang sesuai, unduh templat kosong "
+        "pada tautan di bawah ini, lengkapi dengan data proyek yang bersangkutan, "
+        "kemudian unggah kembali pada kolom yang tersedia."
     )
     tcol1, tcol2 = st.columns(2)
     with tcol1:
         st.download_button(
             "Template EVM", build_evm_template_bytes(), "Template_Data_EVM.xlsx",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            use_container_width=True, help="Sheet Data Umum, Data 14 Periode, BOQ - siap isi",
+            use_container_width=True, help="Memuat sheet Data Umum, Data 14 Periode, dan BOQ yang siap dilengkapi",
         )
     with tcol2:
         st.download_button(
             "Template AHP", build_ahp_template_bytes(), "Template_Perhitungan_AHP.xlsx",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            use_container_width=True, help="Matriks perbandingan berpasangan 3 responden - siap isi",
+            use_container_width=True, help="Memuat matriks perbandingan berpasangan untuk tiga responden",
         )
-    file_evm = st.file_uploader("File data EVM (.xlsx)", type=["xlsx"], help="Berisi sheet Data Umum, Data 14 Periode, BOQ")
-    file_ahp = st.file_uploader("File perhitungan AHP (.xlsx)", type=["xlsx"], help="Berisi matriks perbandingan berpasangan 3 responden")
+    file_evm = st.file_uploader("File data EVM (.xlsx)", type=["xlsx"], help="Memuat sheet Data Umum, Data 14 Periode, dan BOQ")
+    file_ahp = st.file_uploader("File perhitungan AHP (.xlsx)", type=["xlsx"], help="Memuat matriks perbandingan berpasangan untuk tiga responden")
 
     st.markdown('<div class="sidebar-step">Langkah 2 — Parameter Model</div>', unsafe_allow_html=True)
     N_SIM = st.select_slider("Jumlah iterasi Monte Carlo (N)", options=[100, 500, 1000, 2500, 5000, 10000, 25000, 50000], value=10000)
